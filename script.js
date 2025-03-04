@@ -40,16 +40,48 @@ function showAlbum(id){
   .catch((err) => console.log(err));
 // content.innerHTML="Hello World"
 }
-function showToDo(id){
-  let str="";
+function showToDo(id) {
   fetch(`https://jsonplaceholder.typicode.com/todos/?userId=${id}`)
+    .then((res) => res.json())
+    .then((data) => {
+      let str = `<h3>My Todos</h3>`;
+      data &&
+        data.map((value) => {
+          str += `<div><input type='checkbox' ${value.completed && "checked"}>${value.title}</div>`;
+        });
+      content.innerHTML = str;
+    });
+}
+
+function showComments(id){
+  let str="";
+  fetch(`https://jsonplaceholder.typicode.com/comments/?postId=${id}`)
+  .then((res) => res.json())
+  .then((data) =>{
+    data &&
+      data.map((value) =>{
+        str += `<div>
+        <b>${value.name}</b>
+        <p>${value.email}<p>
+        <p>${value.body}<p>
+        </div>`;
+      })
+      content.innerHTML = str;
+  })
+  .catch((err) => console.log(err));
+}
+
+function showPhotos(id){
+  let str="";
+  fetch(`https://jsonplaceholder.typicode.com/photos/?userId=${id}`)
   .then((res) => res.json())
   .then((data) =>{
     data &&
       data.map((value) =>{
         str += `<div>
         <b>${value.title}</b>
-        <p>${value.completed}<p>
+        <p>${value.url}<p>
+        <p>${value.thumbnailUrl}</p>
         </div>`;
       })
       content.innerHTML = str;
@@ -87,6 +119,8 @@ function showHome() {
          <p onclick='showAlbum(${userId})'>Album</p>
           <p onclick='showProfile(${userId})'>Profile</p>
           <p onclick='showToDo(${userId})'>ToDo</p>
+          <p onclick='showPhotos(${userId})'>Photos</p>
+          <p onclick='showComments(${userId})'>Comments</p>
          <p onclick='showLogin()'>Logout</p>
        </div>
        <div class='p-2' id='content'></div>
@@ -99,7 +133,9 @@ function showHome() {
      </div>
    </div>
   `;
+  let name = selUser.options[selUser.selectedIndex].text;
   root.innerHTML = str;
+  username.innerHTML = name;
   showPosts(userId);
 }
 
