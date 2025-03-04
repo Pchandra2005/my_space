@@ -40,6 +40,22 @@ function showAlbum(id){
   .catch((err) => console.log(err));
 // content.innerHTML="Hello World"
 }
+function showToDo(id){
+  let str="";
+  fetch(`https://jsonplaceholder.typicode.com/todos/?userId=${id}`)
+  .then((res) => res.json())
+  .then((data) =>{
+    data &&
+      data.map((value) =>{
+        str += `<div>
+        <b>${value.title}</b>
+        <p>${value.completed}<p>
+        </div>`;
+      })
+      content.innerHTML = str;
+  })
+  .catch((err) => console.log(err));
+}
 
 function showProfile(id) {
   fetch(`https://jsonplaceholder.typicode.com/users/${id}`)
@@ -70,6 +86,7 @@ function showHome() {
          <p onclick='showPosts(${userId})'>Home</p>
          <p onclick='showAlbum(${userId})'>Album</p>
           <p onclick='showProfile(${userId})'>Profile</p>
+          <p onclick='showToDo(${userId})'>ToDo</p>
          <p onclick='showLogin()'>Logout</p>
        </div>
        <div class='p-2' id='content'></div>
